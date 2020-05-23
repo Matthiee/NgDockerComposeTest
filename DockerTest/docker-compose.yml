@@ -21,4 +21,4 @@ services:
       dockerfile: API/Dockerfile
 
 volumes:
-  dbdata:D:\DockerSharedVolume\data
+  dbdata:
