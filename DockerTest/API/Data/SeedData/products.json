@@ -1,0 +1,18 @@
+﻿[
+  {
+    "Name": "Youtube",
+    "Price": 10
+  },
+  {
+    "Name": "Google",
+    "Price": 50
+  },
+  {
+    "Name": "Facebook",
+    "Price": 9000
+  },
+  {
+    "Name": "Instagram",
+    "Price": 333
+  }
+]
