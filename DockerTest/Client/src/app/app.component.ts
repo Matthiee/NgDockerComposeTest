@@ -14,8 +14,6 @@ import { slider } from './route-animations';
   ],
 })
 export class AppComponent {
-  title = 'Client';
-
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }
