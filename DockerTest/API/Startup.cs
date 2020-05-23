@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
+using API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,6 +35,8 @@ namespace API
 
             services.AddStackExchangeRedisCache(opt 
                 => opt.ConfigurationOptions = ConfigurationOptions.Parse(Configuration.GetConnectionString("Redis"), true));
+
+            services.AddTransient<IResponseCacheService, ResponseCacheService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
