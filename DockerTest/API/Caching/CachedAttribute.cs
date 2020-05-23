@@ -24,9 +24,30 @@ namespace API.Caching
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var cacheService = context.HttpContext.RequestServices.GetRequiredService<IResponseCacheService>();
             var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<CachedAttribute>>();
-            var cacheKey = GenerateCacheKeyFromRequest(context.HttpContext.Request);
+
+            try
+            {
+                var cacheKey = GenerateCacheKeyFromRequest(context.HttpContext.Request);
+                var cacheService = context.HttpContext.RequestServices.GetRequiredService<IResponseCacheService>();
+
+                await GetOrCacheResponse(context, next, logger, cacheService, cacheKey);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Unable to get or cache response in Redis!");
+
+                await next();
+            }
+        }
+
+        private async Task GetOrCacheResponse(ActionExecutingContext context, ActionExecutionDelegate next, ILogger<CachedAttribute> logger, IResponseCacheService cacheService, string cacheKey)
+        {
+            if (!HttpMethods.IsGet(context.HttpContext.Request.Method))
+            {
+                await next();
+                return;
+            }
 
             var cachedResponse = await cacheService.GetCachedResponseAsync(cacheKey);
 
@@ -46,11 +67,13 @@ namespace API.Caching
                 return;
             }
 
+            logger.LogInformation("Response was not in Redis Cache!");
+
             var result = await next();
 
             if (result.Result is OkObjectResult okObjectResult)
             {
-                logger.LogInformation("Caching request {CacheKey} for {Seconds} seconds", cacheKey, ttlSeconds);
+                logger.LogInformation("Caching request {CacheKey} for {Seconds} seconds in Redis", cacheKey, ttlSeconds);
 
                 await cacheService.CacheResponseAsync(cacheKey, okObjectResult.Value, TimeSpan.FromSeconds(ttlSeconds));
             }
