@@ -37,6 +37,8 @@ namespace API
                 => opt.ConfigurationOptions = ConfigurationOptions.Parse(Configuration.GetConnectionString("Redis"), true));
 
             services.AddTransient<IResponseCacheService, ResponseCacheService>();
+
+            services.AddCors(setup => setup.AddDefaultPolicy(policy => policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4200")));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -49,12 +51,16 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseStaticFiles();
+
+            app.UseCors();
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }

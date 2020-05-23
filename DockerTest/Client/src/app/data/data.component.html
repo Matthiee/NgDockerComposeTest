@@ -1,1 +1,19 @@
-<p>data works!</p>
+<ng-container *ngIf="products$ | async as products">
+    <table>
+        <thead>
+            <th>Name</th>
+            <th>Price</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of products">
+                <td>{{item.name}}</td>
+                <td>{{item.price | currency}}</td>
+            </tr>
+        </tbody>
+    </table>
+</ng-container>
+<ng-container *ngIf="error">
+    <div class="alert alert-danger">
+        Unable to get data from server!
+    </div>
+</ng-container>

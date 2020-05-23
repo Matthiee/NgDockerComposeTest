@@ -19,5 +19,9 @@
     <PackageReference Include="StackExchange.Redis" Version="2.1.30" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 
 </Project>
