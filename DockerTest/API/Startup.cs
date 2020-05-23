@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
 
 namespace API
 {
@@ -30,6 +31,9 @@ namespace API
             services.AddDbContextPool<ProductsDbContext>(builder 
                 => builder.UseMySql(Configuration.GetConnectionString("MySql"), opt 
                 => opt.EnableRetryOnFailure()));
+
+            services.AddStackExchangeRedisCache(opt 
+                => opt.ConfigurationOptions = ConfigurationOptions.Parse(Configuration.GetConnectionString("Redis"), true));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

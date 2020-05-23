@@ -1,20 +1,26 @@
 version: '3.4'
 
 services: 
+
+  redis:
+    image: redis:alpine3.11
+    restart: on-failure
+
   db:
-     image: mysql:5.7
-     environment:
-       MYSQL_RANDOM_ROOT_PASSWORD: 1
-       MYSQL_DATABASE: dockertest
-       MYSQL_USER: dockeruser
-       MYSQL_PASSWORD: password
-     volumes:
-       - dbdata:/var/lib/mysql
-     restart: always
+    image: mysql:5.7
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: dockertest
+      MYSQL_USER: dockeruser
+      MYSQL_PASSWORD: password
+    volumes:
+      - dbdata:/var/lib/mysql
+    restart: always
 
   api:
     depends_on:
       - db
+      - redis
     image: ${DOCKER_REGISTRY-}api
     build:
       context: .

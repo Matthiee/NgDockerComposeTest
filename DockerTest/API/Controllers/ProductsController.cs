@@ -7,9 +7,11 @@ using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using API.Caching;
 
 namespace API.Controllers
 {
+    [Cached(10)]
     public class ProductsController : BaseApiController
     {
         private readonly ILogger<ProductsController> logger;
@@ -24,6 +26,8 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProducts()
         {
+            await Task.Delay(2000);
+
             return Ok(await context.Products.ToArrayAsync());
         }
 
@@ -34,6 +38,8 @@ namespace API.Controllers
 
             if (product is null)
                 return NotFound();
+
+            await Task.Delay(2000);
 
             return Ok(product);
         }
