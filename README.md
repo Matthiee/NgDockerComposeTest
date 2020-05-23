@@ -8,6 +8,16 @@ It uses MySQL for data storage and Redis to cache api responses for 10 seconds.
 
 Docker-compose is used to spin up the Site, MySQL and Redis. 
 
+## Setup
+ - `cd DockerTest/Client`
+ - `npm i`
+ - `build-prod`
+ - `cd ..`
+ - `docker-compose up`
+ - `docker-compose ps` to find the port the API/Angular is running on
+ - Navigate to `https://localhost:[port]/`
+ - To shut down `docker-compose down`
+
 ### Technologies used
 | Technology            | Version |
 |:----------------------|--------:|
