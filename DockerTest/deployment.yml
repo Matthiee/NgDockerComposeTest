@@ -12,6 +12,7 @@ spec:
         app: test-api-pod
     spec:
       containers:
+        # API
         - name: api
           image: api:latest
           imagePullPolicy: Never
@@ -21,3 +22,36 @@ spec:
               cpu: "500m"
           ports:
             - containerPort: 80
+        # REDIS
+        - name: redis
+          image: redis:alpine3.11
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 6379
+        # MYSQL
+        - name: db
+          image: mysql:5.7
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: dbdata
+              mountPath: /var/lib/mysql
+          env:
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              value: "1"
+            - name: MYSQL_DATABASE
+              value: dockertest
+            - name: MYSQL_USER
+              value: dockeruser
+            - name: MYSQL_PASSWORD
+              value: password
+      volumes:
+        - name: dbdata
+          emptyDir: {}
