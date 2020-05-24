@@ -1,0 +1,35 @@
+# tye application configuration file
+# read all about it at https://github.com/dotnet/tye
+#
+# when you've given us a try, we'd love to know what you think:
+#    https://aka.ms/AA7q20u
+#
+name: dockertest
+services:
+- name: api
+  project: API/API.csproj
+- name: redis
+  image: redis:alpine3.11
+  bindings:
+  - port: 6379
+    connectionString: ${host}:${port}
+- name: redis-cli
+  image: redis
+  args: "redis-cli -h redis MONITOR"
+- name: db
+  image: mysql:5.7
+  bindings:
+  - port: 3306
+    connectionString: Server=${host};Port=${port};Database=dockertest;Uid=dockeruser;Pwd=password;
+  volumes:
+  - name: dbdata
+    target: /var/lib/mysql
+  env:
+  - name: MYSQL_RANDOM_ROOT_PASSWORD
+    value: 1
+  - name: MYSQL_DATABASE
+    value: dockertest
+  - name: MYSQL_USER
+    value: dockeruser
+  - name: MYSQL_PASSWORD
+    value: password

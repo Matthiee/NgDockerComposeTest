@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
+//using Microsoft.Tye.Extensions.Configuration;
 
 namespace API
 {
@@ -30,11 +31,11 @@ namespace API
         {
             services.AddControllers();
             services.AddDbContextPool<ProductsDbContext>(builder 
-                => builder.UseMySql(Configuration.GetConnectionString("MySql"), opt 
+                => builder.UseMySql(Configuration.GetConnectionString("db"), opt 
                 => opt.EnableRetryOnFailure()));
 
             services.AddStackExchangeRedisCache(opt 
-                => opt.ConfigurationOptions = ConfigurationOptions.Parse(Configuration.GetConnectionString("Redis"), true));
+                => opt.ConfigurationOptions = ConfigurationOptions.Parse(Configuration.GetConnectionString("redis"), true));
 
             services.AddTransient<IResponseCacheService, ResponseCacheService>();
 
