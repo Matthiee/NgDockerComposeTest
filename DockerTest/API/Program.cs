@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using API.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,10 @@ namespace API
             {
                 var services = scope.ServiceProvider;
                 var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+                var configuration = services.GetRequiredService<IConfiguration>();
                 var logger = loggerFactory.CreateLogger<Program>();
+
+                logger.LogInformation("Db connection string: {connstring}", configuration.GetConnectionString("db"));
 
                 try
                 {
